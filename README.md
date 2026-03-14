@@ -91,3 +91,4 @@ The project includes a permanent demo data mechanism so dashboards and reports a
 ## Demo Credentials
 - Admin: `admin` / `admin12345`
 - Staff: `staff` / `staff12345`
+- [![Deploy to Render](https://render.com/badge.svg)](https://advanced-inventory-management-django.onrender.com/)
