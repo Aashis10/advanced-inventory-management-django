@@ -1,5 +1,5 @@
 """
-WSGI config for aashish_inventory_system project.
+WSGI config for advanced_inventory_management_django project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'aashish_inventory_system.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'advanced_inventory_management_django.settings')
 
 application = get_wsgi_application()
