@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="page-head mb-4">
+    <div>
+        <h1 class="page-title mb-1">Advanced Analytics</h1>
+        <p class="page-subtitle mb-0">Revenue and inventory intelligence with trend-based decisions.</p>
+    </div>
+    <form method="get" class="d-flex gap-2">
+        <select class="form-select" name="range" onchange="this.form.submit()">
+            <option value="30" {% if selected_range == '30' %}selected{% endif %}>Last 30 days</option>
+            <option value="90" {% if selected_range == '90' %}selected{% endif %}>Last 90 days</option>
+            <option value="180" {% if selected_range == '180' %}selected{% endif %}>Last 180 days</option>
+            <option value="365" {% if selected_range == '365' %}selected{% endif %}>Last 365 days</option>
+        </select>
+    </form>
+</div>
+
+<div class="row g-3">
+    <div class="col-lg-6">
+        <div class="panel chart-panel">
+            <h5>Monthly Revenue Chart</h5>
+            <canvas id="revenueProfitChart"></canvas>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="panel chart-panel">
+            <h5>Sales by Category</h5>
+            <canvas id="salesByCategoryChart"></canvas>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="panel chart-panel">
+            <h5>Profit Margin Chart</h5>
+            <canvas id="profitMarginChart"></canvas>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="panel chart-panel">
+            <h5>Stock Movement Chart</h5>
+            <canvas id="stockTrendChart"></canvas>
+        </div>
+    </div>
+    <div class="col-12">
+        <div class="panel chart-panel">
+            <h5>Current Stock Snapshot</h5>
+            <canvas id="stockSnapshotChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<script id="analytics-data" type="application/json">{
+    "sales_category_labels": {{ sales_category_labels|safe }},
+    "sales_category_values": {{ sales_category_values|safe }},
+    "revenue_labels": {{ revenue_labels|safe }},
+    "revenue_values": {{ revenue_values|safe }},
+    "profit_values": {{ profit_values|safe }},
+    "margin_labels": {{ margin_labels|safe }},
+    "margin_values": {{ margin_values|safe }},
+    "movement_labels": {{ movement_labels|safe }},
+    "movement_incoming": {{ movement_incoming|safe }},
+    "movement_outgoing": {{ movement_outgoing|safe }},
+    "stock_snapshot_labels": {{ stock_snapshot_labels|safe }},
+    "stock_snapshot_values": {{ stock_snapshot_values|safe }}
+}</script>
+{% endblock %}

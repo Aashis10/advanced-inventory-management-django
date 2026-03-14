@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="panel">
+    <div class="row g-4">
+        <div class="col-md-4">
+            {% if product.image %}<img src="{{ product.image.url }}" class="img-fluid rounded" alt="{{ product.name }}">{% else %}<div class="product-placeholder">No Image Available</div>{% endif %}
+        </div>
+        <div class="col-md-8">
+            <h3>{{ product.name }}</h3>
+            <p class="text-muted">{{ product.brand }}</p>
+            <p><b>Category:</b> {{ product.category.name }}</p>
+            <p><b>Price:</b> ${{ product.price }}</p>
+            <p><b>Quantity:</b> {{ product.quantity }}</p>
+            <p><b>Inventory Value:</b> ${{ product.inventory_value }}</p>
+            <p><b>Reorder Level:</b> {{ product.reorder_level }}</p>
+            <p><b>Supplier:</b> {{ latest_supplier }}</p>
+            <p>
+                <b>Status:</b>
+                {% if product.stock_status == 'in' %}<span class="badge bg-success-subtle text-success-emphasis">In Stock</span>{% endif %}
+                {% if product.stock_status == 'low' %}<span class="badge bg-warning-subtle text-warning-emphasis">Low Stock</span>{% endif %}
+                {% if product.stock_status == 'out' %}<span class="badge bg-danger-subtle text-danger-emphasis">Out of Stock</span>{% endif %}
+            </p>
+            <p><b>Date Added:</b> {{ product.created_at|date:'Y-m-d H:i' }}</p>
+            <div class="row g-2 mb-3">
+                <div class="col-md-4"><div class="kpi-card accent-blue"><p>Units Sold</p><h3>{{ sales_summary.total_sold|default:0 }}</h3></div></div>
+                <div class="col-md-4"><div class="kpi-card accent-green"><p>Revenue</p><h3>${{ sales_summary.total_revenue|default:0|floatformat:2 }}</h3></div></div>
+                <div class="col-md-4"><div class="kpi-card accent-indigo"><p>Profit</p><h3>${{ sales_summary.total_profit|default:0|floatformat:2 }}</h3></div></div>
+            </div>
+            <a href="{% url 'products:list' %}" class="btn btn-outline-modern">Back</a>
+        </div>
+    </div>
+</div>
+
+<div class="panel mt-3">
+    <h5 class="mb-3">Sales History</h5>
+    <div class="table-responsive">
+        <table class="table table-hover align-middle inventory-table mb-0">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Buyer</th>
+                    <th>Qty</th>
+                    <th>Total</th>
+                    <th>Paid</th>
+                    <th>Balance</th>
+                    <th>Sold By</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for sale in recent_sales %}
+                <tr>
+                    <td>{{ sale.date|date:'Y-m-d H:i' }}</td>
+                    <td>{{ sale.buyer_name }}</td>
+                    <td>{{ sale.quantity }}</td>
+                    <td>${{ sale.total_price }}</td>
+                    <td>${{ sale.amount_paid }}</td>
+                    <td>${{ sale.balance_due }}</td>
+                    <td>{{ sale.sold_by.username }}</td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="7" class="text-muted">No sales history available for this product.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

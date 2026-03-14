@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="page-head mb-4">
+    <div>
+        <h1 class="page-title mb-1">Operations Dashboard</h1>
+        <p class="page-subtitle mb-0">Real-time inventory and revenue pulse for Aashish Tech Suppliers.</p>
+    </div>
+</div>
+
+<div class="row g-3 mb-4 kpi-grid">
+    <div class="col-sm-6 col-xl-2-4">
+        <div class="kpi-card accent-blue">
+            <p>Total Products</p>
+            <h3 class="counter" data-target="{{ total_products }}">0</h3>
+            <i class="fa-solid fa-boxes-stacked"></i>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-2-4">
+        <div class="kpi-card accent-blue">
+            <p>Inventory Value</p>
+            <h3>$<span class="counter" data-target="{{ total_inventory_value|floatformat:0 }}">0</span></h3>
+            <i class="fa-solid fa-wallet"></i>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-2-4">
+        <div class="kpi-card accent-green">
+            <p>Products Sold Today</p>
+            <h3 class="counter" data-target="{{ products_sold_today }}">0</h3>
+            <i class="fa-solid fa-receipt"></i>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-2-4">
+        <div class="kpi-card accent-orange">
+            <p>Low Stock Items</p>
+            <h3 class="counter" data-target="{{ low_stock_count }}">0</h3>
+            <i class="fa-solid fa-triangle-exclamation"></i>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-2-4">
+        <div class="kpi-card accent-slate">
+            <p>Total Categories</p>
+            <h3 class="counter" data-target="{{ total_categories }}">0</h3>
+            <i class="fa-solid fa-layer-group"></i>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3" id="analytics">
+    <div class="col-xl-8"><div class="panel chart-panel"><h5 class="mb-3">Monthly Sales Trend</h5><canvas id="salesTrendChart"></canvas></div></div>
+    <div class="col-xl-4"><div class="panel chart-panel"><h5 class="mb-3">Category Revenue Distribution</h5><canvas id="categoryChart"></canvas></div></div>
+    <div class="col-xl-6"><div class="panel chart-panel"><h5 class="mb-3">Top Selling Products</h5><canvas id="topSellingChart"></canvas></div></div>
+    <div class="col-xl-6">
+        <div class="panel">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="mb-0">Low Stock Alert</h5>
+                <a href="{% url 'products:list' %}?stock=low" class="btn btn-sm btn-outline-modern">View Inventory</a>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle inventory-table mb-0">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Qty</th>
+                            <th>Reorder Suggestion</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in low_stock_rows %}
+                        <tr>
+                            <td>{{ item.name }}</td>
+                            <td><span class="badge bg-warning-subtle text-warning-emphasis">{{ item.quantity }}</span></td>
+                            <td><span class="badge bg-danger-subtle text-danger-emphasis">Order {{ item.reorder_suggestion }}</span></td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="3" class="text-muted">No low stock warnings right now.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script id="chart-data" type="application/json">{
+    "category_labels": {{ category_labels|safe }},
+    "category_values": {{ category_values|safe }},
+    "monthly_labels": {{ monthly_labels|safe }},
+    "monthly_values": {{ monthly_values|safe }},
+    "top_labels": {{ top_labels|safe }},
+    "top_values": {{ top_values|safe }}
+}</script>
+{% endblock %}

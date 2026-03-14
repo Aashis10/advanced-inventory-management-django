@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="page-head mb-4">
+    <div>
+        <h1 class="page-title mb-1">Report Center</h1>
+        <p class="page-subtitle mb-0">Generate operational reports and export to CSV or PDF.</p>
+    </div>
+</div>
+
+<div class="row g-3 mb-3">
+    <div class="col-md-3"><div class="kpi-card accent-indigo"><p>Sales Records</p><h3>{{ sales_count }}</h3></div></div>
+    <div class="col-md-3"><div class="kpi-card accent-blue"><p>Purchase Records</p><h3>{{ purchase_count }}</h3></div></div>
+    <div class="col-md-3"><div class="kpi-card accent-orange"><p>Low Stock Items</p><h3>{{ low_stock_count }}</h3></div></div>
+    <div class="col-md-3"><div class="kpi-card accent-green"><p>Inventory Value</p><h3>${{ inventory_value|floatformat:0 }}</h3></div></div>
+</div>
+<div class="row g-3 mb-3">
+    <div class="col-md-4"><div class="panel"><h6>Total Sales Value</h6><h4>${{ total_sales_value|floatformat:2 }}</h4></div></div>
+    <div class="col-md-4"><div class="panel"><h6>Total Purchase Value</h6><h4>${{ total_purchase_value|floatformat:2 }}</h4></div></div>
+    <div class="col-md-4"><div class="panel"><h6>Total Profit</h6><h4>${{ total_profit|floatformat:2 }}</h4></div></div>
+</div>
+<div class="panel">
+    <h5 class="mb-3">Export Reports</h5>
+    <div class="report-grid">
+        <div class="report-item">
+            <h6>Sales Report</h6>
+            <div class="d-flex gap-2"><a href="{% url 'reports:sales_csv' %}" class="btn btn-outline-modern btn-sm">CSV</a><a href="{% url 'reports:sales_pdf' %}" class="btn btn-outline-modern btn-sm">PDF</a></div>
+        </div>
+        <div class="report-item">
+            <h6>Purchase Report</h6>
+            <div class="d-flex gap-2"><a href="{% url 'reports:purchase_csv' %}" class="btn btn-outline-modern btn-sm">CSV</a><a href="{% url 'reports:purchase_pdf' %}" class="btn btn-outline-modern btn-sm">PDF</a></div>
+        </div>
+        <div class="report-item">
+            <h6>Inventory Report</h6>
+            <div class="d-flex gap-2"><a href="{% url 'reports:inventory_csv' %}" class="btn btn-outline-modern btn-sm">CSV</a><a href="{% url 'reports:inventory_pdf' %}" class="btn btn-outline-modern btn-sm">PDF</a></div>
+        </div>
+        <div class="report-item">
+            <h6>Profit Report</h6>
+            <div class="d-flex gap-2"><a href="{% url 'reports:profit_csv' %}" class="btn btn-outline-modern btn-sm">CSV</a><a href="{% url 'reports:profit_pdf' %}" class="btn btn-outline-modern btn-sm">PDF</a></div>
+        </div>
+        <div class="report-item">
+            <h6>Low Stock Report</h6>
+            <div class="d-flex gap-2"><a href="{% url 'reports:low_stock_csv' %}" class="btn btn-outline-modern btn-sm">CSV</a><a href="{% url 'reports:low_stock_pdf' %}" class="btn btn-outline-modern btn-sm">PDF</a></div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="panel">
+    <h4>Delete Category</h4>
+    <p>Are you sure you want to delete <b>{{ category.name }}</b>?</p>
+    <form method="post">{% csrf_token %}
+        <button class="btn btn-danger" type="submit">Delete</button>
+        <a href="{% url 'products:category_list' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}

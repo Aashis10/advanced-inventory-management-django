@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="panel form-panel">
+    <h3>Record New Sale</h3>
+    <form method="post" class="row g-3">{% csrf_token %}
+        <div class="col-md-6">
+            <label class="form-label">{{ form.buyer_name.label }}</label>
+            {{ form.buyer_name }}
+            {% if form.buyer_name.errors %}<div class="text-danger small">{{ form.buyer_name.errors|striptags }}</div>{% endif %}
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">{{ form.product.label }}</label>
+            {{ form.product }}
+            {% if form.product.errors %}<div class="text-danger small">{{ form.product.errors|striptags }}</div>{% endif %}
+        </div>
+        <div class="col-md-4">
+            <label class="form-label">{{ form.quantity.label }}</label>
+            {{ form.quantity }}
+            {% if form.quantity.errors %}<div class="text-danger small">{{ form.quantity.errors|striptags }}</div>{% endif %}
+        </div>
+        <div class="col-md-4">
+            <label class="form-label">{{ form.payment_method.label }}</label>
+            {{ form.payment_method }}
+            {% if form.payment_method.errors %}<div class="text-danger small">{{ form.payment_method.errors|striptags }}</div>{% endif %}
+        </div>
+        <div class="col-md-4">
+            <label class="form-label">{{ form.amount_paid.label }}</label>
+            {{ form.amount_paid }}
+            {% if form.amount_paid.errors %}<div class="text-danger small">{{ form.amount_paid.errors|striptags }}</div>{% endif %}
+        </div>
+        <div class="col-12">
+            <button class="btn btn-primary-modern" type="submit"><i class="fa-solid fa-cart-plus"></i>Save Sale</button>
+            <a href="{% url 'sales:list' %}" class="btn btn-outline-modern">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

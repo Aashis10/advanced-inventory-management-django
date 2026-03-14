@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h3 class="mb-0">Inventory</h3>
+    {% if is_staff_user %}
+    <a href="{% url 'products:add' %}" class="btn btn-primary-modern"><i class="fa-solid fa-plus"></i>Add Product</a>
+    {% endif %}
+</div>
+
+<form class="panel mb-3" method="get">
+    <div class="row g-2 align-items-end">
+        <div class="col-md-3">
+            <label class="form-label">Search</label>
+            <input list="productSuggestions" class="form-control" type="text" name="search" value="{{ search }}" placeholder="Name, brand, category...">
+            <datalist id="productSuggestions">
+                {% for item in search_suggestions %}<option value="{{ item }}">{% endfor %}
+            </datalist>
+        </div>
+        <div class="col-md-2">
+            <label class="form-label">Category</label>
+            <select class="form-select" name="category">
+                <option value="">All</option>
+                {% for category in categories %}
+                    <option value="{{ category.id }}" {% if category_id == category.id|stringformat:'s' %}selected{% endif %}>{{ category.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label class="form-label">Brand</label>
+            <select class="form-select" name="brand">
+                <option value="">All</option>
+                {% for item in brands %}
+                    <option value="{{ item }}" {% if brand == item %}selected{% endif %}>{{ item }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label">Sort</label>
+            <select class="form-select" name="sort">
+                <option value="-created_at" {% if sort == '-created_at' %}selected{% endif %}>Newest</option>
+                <option value="name" {% if sort == 'name' %}selected{% endif %}>Name A-Z</option>
+                <option value="-name" {% if sort == '-name' %}selected{% endif %}>Name Z-A</option>
+                <option value="price" {% if sort == 'price' %}selected{% endif %}>Price Low-High</option>
+                <option value="-price" {% if sort == '-price' %}selected{% endif %}>Price High-Low</option>
+                <option value="quantity" {% if sort == 'quantity' %}selected{% endif %}>Stock Low-High</option>
+                <option value="-quantity" {% if sort == '-quantity' %}selected{% endif %}>Stock High-Low</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label class="form-label">Stock</label>
+            <select class="form-select" name="stock">
+                <option value="" {% if stock == '' %}selected{% endif %}>All</option>
+                <option value="in" {% if stock == 'in' %}selected{% endif %}>In Stock</option>
+                <option value="low" {% if stock == 'low' %}selected{% endif %}>Low Stock</option>
+                <option value="out" {% if stock == 'out' %}selected{% endif %}>Out of Stock</option>
+            </select>
+        </div>
+        <div class="col-md-12 d-flex gap-2 justify-content-end mt-3">
+            <button class="btn btn-primary-modern" type="submit"><i class="fa-solid fa-filter"></i>Apply Filters</button>
+            <a class="btn btn-outline-modern" href="{% url 'products:list' %}">Reset</a>
+        </div>
+    </div>
+</form>
+
+<div class="table-responsive panel">
+<table class="table table-hover align-middle inventory-table">
+    <thead><tr><th>Product</th><th>Category</th><th>Brand</th><th>Price</th><th>Quantity</th><th>Status</th><th class="text-end">Actions</th></tr></thead>
+    <tbody>
+    {% for product in page_obj %}
+        <tr>
+            <td><a href="{% url 'products:detail' product.id %}" class="fw-semibold">{{ product.name }}</a></td>
+            <td>{{ product.category.name }}</td>
+            <td>{{ product.brand }}</td>
+            <td>${{ product.price }}</td>
+            <td>{{ product.quantity }}</td>
+            <td>
+                {% if product.stock_status == 'in' %}<span class="badge badge-stock bg-success-subtle text-success-emphasis">In Stock</span>{% endif %}
+                {% if product.stock_status == 'low' %}<span class="badge badge-stock bg-warning-subtle text-warning-emphasis">Low Stock</span>{% endif %}
+                {% if product.stock_status == 'out' %}<span class="badge badge-stock bg-danger-subtle text-danger-emphasis">Out of Stock</span>{% endif %}
+            </td>
+            <td class="text-end">
+                {% if is_staff_user %}
+                <a href="{% url 'products:edit' product.id %}" class="btn btn-sm btn-outline-modern"><i class="fa-regular fa-pen-to-square"></i>Edit</a>
+                <a href="{% url 'products:delete' product.id %}" class="btn btn-sm btn-danger-modern"><i class="fa-regular fa-trash-can"></i>Delete</a>
+                {% else %}
+                <span class="text-muted small">View only</span>
+                {% endif %}
+            </td>
+        </tr>
+    {% empty %}
+        <tr><td colspan="7">No products found.</td></tr>
+    {% endfor %}
+    </tbody>
+</table>
+</div>
+
+<nav class="mt-4">
+    <ul class="pagination">
+        {% if page_obj.has_previous %}<li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}&search={{ search }}&category={{ category_id }}&brand={{ brand }}&sort={{ sort }}&stock={{ stock }}">Previous</a></li>{% endif %}
+        <li class="page-item active"><span class="page-link">{{ page_obj.number }}</span></li>
+        {% if page_obj.has_next %}<li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}&search={{ search }}&category={{ category_id }}&brand={{ brand }}&sort={{ sort }}&stock={{ stock }}">Next</a></li>{% endif %}
+    </ul>
+</nav>
+{% endblock %}

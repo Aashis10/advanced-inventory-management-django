@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="panel mb-3">
+    <h3 class="mb-1">Global Search</h3>
+    <p class="text-muted mb-0">Search results for "{{ query|default:'-' }}"</p>
+</div>
+
+<div class="row g-3">
+    <div class="col-lg-4">
+        <div class="panel">
+            <h5>Products</h5>
+            <ul class="list-group list-group-flush">
+                {% for product in product_results %}
+                <li class="list-group-item bg-transparent ps-0">
+                    <a href="{% url 'products:detail' product.id %}">{{ product.name }}</a>
+                    <small class="d-block text-muted">{{ product.category.name }}</small>
+                </li>
+                {% empty %}
+                <li class="list-group-item bg-transparent ps-0 text-muted">No product results.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="panel">
+            <h5>Categories</h5>
+            <ul class="list-group list-group-flush">
+                {% for category in category_results %}
+                <li class="list-group-item bg-transparent ps-0">{{ category.name }}</li>
+                {% empty %}
+                <li class="list-group-item bg-transparent ps-0 text-muted">No category results.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="panel">
+            <h5>Sales</h5>
+            <ul class="list-group list-group-flush">
+                {% for sale in sale_results %}
+                <li class="list-group-item bg-transparent ps-0">
+                    {{ sale.product.name }} - {{ sale.quantity }} units
+                    <small class="d-block text-muted">{{ sale.date|date:'Y-m-d H:i' }}</small>
+                </li>
+                {% empty %}
+                <li class="list-group-item bg-transparent ps-0 text-muted">No sales results.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
